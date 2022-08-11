@@ -124,6 +124,7 @@
             this.buttonLoadSensorData.TabIndex = 2;
             this.buttonLoadSensorData.Text = "Load Sensor Data";
             this.buttonLoadSensorData.UseVisualStyleBackColor = true;
+            this.buttonLoadSensorData.Click += new System.EventHandler(this.buttonLoadSensorData_Click);
             // 
             // listViewSensorData
             // 
@@ -176,6 +177,7 @@
             this.buttonIterativeSearchA.TabIndex = 6;
             this.buttonIterativeSearchA.Text = "Search";
             this.buttonIterativeSearchA.UseVisualStyleBackColor = true;
+            this.buttonIterativeSearchA.Click += new System.EventHandler(this.buttonIterativeSearchA_Click);
             // 
             // textBoxIterativeSearchTimeA
             // 
@@ -202,6 +204,7 @@
             this.buttonRecursiveSearchA.TabIndex = 9;
             this.buttonRecursiveSearchA.Text = "Search";
             this.buttonRecursiveSearchA.UseVisualStyleBackColor = true;
+            this.buttonRecursiveSearchA.Click += new System.EventHandler(this.buttonRecursiveSearchA_Click);
             // 
             // textBoxRecursiveSearchTimeA
             // 
@@ -226,6 +229,7 @@
             this.textBoxSearchTargetA.Name = "textBoxSearchTargetA";
             this.textBoxSearchTargetA.Size = new System.Drawing.Size(100, 20);
             this.textBoxSearchTargetA.TabIndex = 12;
+            this.textBoxSearchTargetA.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxSearchTargetA_KeyPress);
             // 
             // label5
             // 
@@ -244,6 +248,7 @@
             this.buttonSelectionSortA.TabIndex = 14;
             this.buttonSelectionSortA.Text = "Sort";
             this.buttonSelectionSortA.UseVisualStyleBackColor = true;
+            this.buttonSelectionSortA.Click += new System.EventHandler(this.buttonSelectionSortA_Click);
             // 
             // textBoxSelectionSortTimeA
             // 
@@ -270,6 +275,7 @@
             this.buttonInsertionSortA.TabIndex = 17;
             this.buttonInsertionSortA.Text = "Sort";
             this.buttonInsertionSortA.UseVisualStyleBackColor = true;
+            this.buttonInsertionSortA.Click += new System.EventHandler(this.buttonInsertionSortA_Click);
             // 
             // textBoxInsertionSortTimeA
             // 
@@ -284,6 +290,7 @@
             this.listBoxSensorA.FormattingEnabled = true;
             this.listBoxSensorA.Location = new System.Drawing.Point(382, 60);
             this.listBoxSensorA.Name = "listBoxSensorA";
+            this.listBoxSensorA.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.listBoxSensorA.Size = new System.Drawing.Size(110, 446);
             this.listBoxSensorA.TabIndex = 19;
             // 
@@ -314,6 +321,7 @@
             this.buttonIterativeSearchB.TabIndex = 22;
             this.buttonIterativeSearchB.Text = "Search";
             this.buttonIterativeSearchB.UseVisualStyleBackColor = true;
+            this.buttonIterativeSearchB.Click += new System.EventHandler(this.buttonIterativeSearchB_Click);
             // 
             // textBoxIterativeSearchTimeB
             // 
@@ -341,6 +349,7 @@
             this.buttonRecursiveSearchB.TabIndex = 25;
             this.buttonRecursiveSearchB.Text = "Search";
             this.buttonRecursiveSearchB.UseVisualStyleBackColor = true;
+            this.buttonRecursiveSearchB.Click += new System.EventHandler(this.buttonRecursiveSearchB_Click);
             // 
             // textBoxRecursiveSearchTimeB
             // 
@@ -365,6 +374,7 @@
             this.textBoxSearchTargetB.Name = "textBoxSearchTargetB";
             this.textBoxSearchTargetB.Size = new System.Drawing.Size(100, 20);
             this.textBoxSearchTargetB.TabIndex = 28;
+            this.textBoxSearchTargetB.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxSearchTargetB_KeyPress);
             // 
             // label11
             // 
@@ -383,6 +393,7 @@
             this.buttonSelectionSortB.TabIndex = 30;
             this.buttonSelectionSortB.Text = "Sort";
             this.buttonSelectionSortB.UseVisualStyleBackColor = true;
+            this.buttonSelectionSortB.Click += new System.EventHandler(this.buttonSelectionSortB_Click);
             // 
             // textBoxSelectionSortTimeB
             // 
@@ -409,6 +420,7 @@
             this.buttonInsertionSortB.TabIndex = 33;
             this.buttonInsertionSortB.Text = "Sort";
             this.buttonInsertionSortB.UseVisualStyleBackColor = true;
+            this.buttonInsertionSortB.Click += new System.EventHandler(this.buttonInsertionSortB_Click);
             // 
             // textBoxInsertionSortTimeB
             // 
@@ -423,6 +435,7 @@
             this.listBoxSensorB.FormattingEnabled = true;
             this.listBoxSensorB.Location = new System.Drawing.Point(685, 60);
             this.listBoxSensorB.Name = "listBoxSensorB";
+            this.listBoxSensorB.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
             this.listBoxSensorB.Size = new System.Drawing.Size(110, 446);
             this.listBoxSensorB.TabIndex = 35;
             // 
