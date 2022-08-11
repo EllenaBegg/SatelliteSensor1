@@ -33,7 +33,10 @@ namespace SatelliteSensor1
 
         #region Global Methods
 
-        //4.2 Create a method called “LoadData” which will populate both LinkedLists.
+        // 4.2 Create a method called “LoadData” which will populate both LinkedLists.
+        /// <summary>
+        /// Read data from the Galileo Library into two LinkedLists with max size of 400.
+        /// </summary>
         private void LoadData()
         {
             ReadData readData = new ReadData(); // Declare an instance of the Galileo library 
@@ -48,7 +51,10 @@ namespace SatelliteSensor1
             }
         }
 
-        //4.3 Create a custom method called “ShowAllSensorData” which will display both LinkedLists in a ListView
+        // 4.3 Create a custom method called “ShowAllSensorData” which will display both LinkedLists in a ListView
+        /// <summary>
+        /// Display both LinkedLists in a ListView
+        /// </summary>
         private void ShowAllSensorData()
         {
             listViewSensorData.Items.Clear();
@@ -65,12 +71,22 @@ namespace SatelliteSensor1
 
         #region Utility Methods
         // 4.5 Create a method called "NumberOfNodes" to return integer of number of nodes in a LinkedList
+        /// <summary>
+        /// Simply count and return the number of nodes in a LinkedList
+        /// </summary>
+        /// <param name="linkedList"></param>
+        /// <returns></returns>
         private int NumberOfNodes(LinkedList<double> linkedList)
         {
             return linkedList.Count;
         }
 
         // 4.6 Create a method called "DisplayListboxData" to display content of a LinkedList in appropriate ListBox
+        /// <summary>
+        /// Display content of a LinkedList in the appropriate ListBox
+        /// </summary>
+        /// <param name="linkedList">The LinkedList<double> containing data</param>
+        /// <param name="listBoxName">The ListBox to display the data in</param>
         private void DisplayListboxData(LinkedList<double> linkedList, ListBox listBoxName)
         {
             listBoxName.Items.Clear(); 
@@ -80,6 +96,14 @@ namespace SatelliteSensor1
             }
         }
 
+        /// <summary>
+        /// When a Search is invoked, the found item (closest value to given search value) will be highlighted 
+        /// in the ListBox, along with 2 before and after it.
+        /// If the found item is at the beginning of the data list, then the first 3 items will be highlighted.
+        /// If the found item is at the end of the data list, then the last 3 items will be highlighted.
+        /// </summary>
+        /// <param name="listBox">The ListBox to highlight the rows in</param>
+        /// <param name="index">The index of the ListBox where the found item is</param>
         private void HighlightItemInListBox(ListBox listBox, int index)
         {
             listBox.ClearSelected();
@@ -108,6 +132,12 @@ namespace SatelliteSensor1
             }
         } // end HighlightItemInListBox()
 
+        /// <summary>
+        /// Confirm the input given to invoke a Search is between the actual values of the LinkedList data
+        /// </summary>
+        /// <param name="linkedList">The LinkedList<double> to check</param>
+        /// <param name="searchValue">The input value to confirm is present in the LinkedList</param>
+        /// <returns></returns>
         private bool IsValidSearchValue(LinkedList<double> linkedList, double searchValue)
         {
             // Check search value is between actual values of LinkedList data
@@ -127,6 +157,11 @@ namespace SatelliteSensor1
 
         #region Sort and Search Methods
         // 4.7 Create a method called “SelectionSort” 
+        /// <summary>
+        /// Run a Selection Sort algorithm on a given LinkedList<double>
+        /// </summary>
+        /// <param name="linkedList"></param>
+        /// <returns></returns>
         private bool SelectionSort(LinkedList<double> linkedList)
         {
             int minimum = 0;
@@ -155,6 +190,11 @@ namespace SatelliteSensor1
         }
 
         // 4.8 Create a method called “InsertionSort” 
+        /// <summary>
+        /// Run a Insertion Sort algorithm on a given LinkedList<double>
+        /// </summary>
+        /// <param name="linkedList"></param>
+        /// <returns></returns>
         private bool InsertionSort(LinkedList<double> linkedList)
         {
             int maximum = NumberOfNodes(linkedList);
@@ -178,9 +218,14 @@ namespace SatelliteSensor1
         }
 
         // 4.9 Create a method called “BinarySearchIterative” 
-        // 'minimum' param = minimum list size
-        // 'maximum' param = number of nodes in List
-        // return value = found index
+        /// <summary>
+        /// Run a Iterative Binary Search algorithm on a given LinkedList<double>
+        /// </summary>
+        /// <param name="linkedList">The LinkedList<double> to search</param>
+        /// <param name="searchValue">The value to search for</param>
+        /// <param name="minimum">The Minimum size of the LinkedList</param>
+        /// <param name="maximum">The number of nodes of the LinkedList</param>
+        /// <returns>The index of the LinkedList where the item has been found</returns>
         private int BinarySearchIterative(LinkedList<double> linkedList, double searchValue, int minimum, int maximum)
         {
             while (minimum <= (maximum - 1))
@@ -214,9 +259,14 @@ namespace SatelliteSensor1
         }
 
         // 4.10 Create a method called “BinarySearchRecursive” 
-        // 'minimum' param = minimum list size
-        // 'maximum' param = number of nodes in List
-        // return value = found index
+        /// <summary>
+        /// Run a Recursive Binary Search algorithm on a given LinkedList<double>
+        /// </summary>
+        /// <param name="linkedList">The LinkedList<double> to search</param>
+        /// <param name="searchValue">The value to search for</param>
+        /// <param name="minimum">The Minimum size of the LinkedList</param>
+        /// <param name="maximum">The number of nodes of the LinkedList</param>
+        /// <returns></returns>
         private int BinarySearchRecursive(LinkedList<double> linkedList, double searchValue, int minimum, int maximum)
         {
             if (minimum <= maximum -1)
@@ -251,6 +301,11 @@ namespace SatelliteSensor1
 
         #region UI Button Methods
         // 4.4 Button method to call LoadData and ShowAllSensorData
+        /// <summary>
+        /// Load data into both of the LinkedLists, then display the data in the ListView
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonLoadSensorData_Click(object sender, EventArgs e)
         {
             LoadData();
@@ -258,6 +313,12 @@ namespace SatelliteSensor1
         }
 
         // 4.12 Create Button click methods to sort LinkedList<T> using SelectionSort method
+        /// <summary>
+        /// Invoke the Selection Sort algorithm on Sensor A data, display the milliseconds it takes to run the Sort algorithm,
+        /// and redisplay the sorted data into the ListView and ListBox under Sensor A.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonSelectionSortA_Click(object sender, EventArgs e)
         {
             // Must start with a StopWatch before calling the method.
@@ -265,12 +326,19 @@ namespace SatelliteSensor1
             stopWatch.Start();
             SelectionSort(sensorALinkedList);
             stopWatch.Stop();
-            textBoxSelectionSortTimeA.Text = stopWatch.ElapsedMilliseconds.ToString(); // display milliseconds it took to run the Sort
+            // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
+            textBoxSelectionSortTimeA.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds"; 
             ShowAllSensorData();
             DisplayListboxData(sensorALinkedList, listBoxSensorA);
         }
 
         // 4.12 Create Button click methods to sort LinkedList<T> using SelectionSort method
+        /// <summary>
+        /// Invoke the Selection Sort algorithm on Sensor B data, display the milliseconds it takes to run the Sort algorithm,
+        /// and redisplay the sorted data into the ListView and ListBox under Sensor B.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonSelectionSortB_Click(object sender, EventArgs e)
         {
             // Must start with a StopWatch before calling the method.
@@ -278,12 +346,19 @@ namespace SatelliteSensor1
             stopWatch.Start();
             SelectionSort(sensorBLinkedList);
             stopWatch.Stop();
-            textBoxSelectionSortTimeB.Text = stopWatch.ElapsedMilliseconds.ToString(); // display milliseconds it took to run the Sort
+            // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
+            textBoxSelectionSortTimeB.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds"; 
             ShowAllSensorData();
             DisplayListboxData(sensorBLinkedList, listBoxSensorB);
         }
 
         // 4.12 Create Button click methods to sort LinkedList<T> using InsertionSort method
+        /// <summary>
+        /// Invoke the Insertion Sort algorithm on Sensor A data, display the milliseconds it takes to run the Sort algorithm,
+        /// and redisplay the sorted data into the ListView and ListBox under Sensor A.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonInsertionSortA_Click(object sender, EventArgs e)
         {
             // Must start with a StopWatch before calling the method.
@@ -291,12 +366,19 @@ namespace SatelliteSensor1
             stopWatch.Start();
             InsertionSort(sensorALinkedList);
             stopWatch.Stop();
-            textBoxInsertionSortTimeA.Text = stopWatch.ElapsedMilliseconds.ToString(); // display milliseconds it took to run the Sort
+            // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
+            textBoxInsertionSortTimeA.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds"; 
             ShowAllSensorData();
             DisplayListboxData(sensorALinkedList, listBoxSensorA);
         }
 
         // 4.12 Create Button click methods to sort LinkedList<T> using InsertionSort method
+        /// <summary>
+        /// Invoke the Insertion Sort algorithm on Sensor B data, display the milliseconds it takes to run the Sort algorithm,
+        /// and redisplay the sorted data into the ListView and ListBox under Sensor B.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonInsertionSortB_Click(object sender, EventArgs e)
         {
             // Must start with a StopWatch before calling the method.
@@ -304,12 +386,19 @@ namespace SatelliteSensor1
             stopWatch.Start();
             InsertionSort(sensorBLinkedList);
             stopWatch.Stop();
-            textBoxInsertionSortTimeB.Text = stopWatch.ElapsedMilliseconds.ToString(); // display milliseconds it took to run the Sort
+            // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
+            textBoxInsertionSortTimeB.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds";  
             ShowAllSensorData();
             DisplayListboxData(sensorBLinkedList, listBoxSensorB);
         }
 
         // 4.11 Create Button click methods to search LinkedList<T> using Binary Search Iterative method
+        /// <summary>
+        /// Invoke the Iterative Search algorithm on Sensor A data, display the ticks it takes to run the Search algorithm,
+        /// and highlist the found item in the ListBox under Sensor A, along with 2 before and after it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonIterativeSearchA_Click(object sender, EventArgs e)
         {
             // Make sure we have data
@@ -331,11 +420,13 @@ namespace SatelliteSensor1
                             int foundValue = BinarySearchIterative(sensorALinkedList, searchValue, 0, sensorALinkedList.Count);
                             stopWatch.Stop();
 
+                            DisplayListboxData(sensorALinkedList, listBoxSensorA);
+
                             // Highlight value in ListBox, plus two either side
                             HighlightItemInListBox(listBoxSensorA, foundValue);
 
-                            // Display number of ticks to run this Search algorithm
-                            textBoxIterativeSearchTimeA.Text = stopWatch.ElapsedTicks.ToString();
+                            // Display number of ticks to run this Search algorithm. Not showing any decimals
+                            textBoxIterativeSearchTimeA.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks";
                         }
                         else
                         {
@@ -359,6 +450,12 @@ namespace SatelliteSensor1
         } // end buttonIterativeSearchA_Click()
 
         // 4.11 Create Button click methods to search LinkedList<T> using Binary Search Iterative method
+        /// <summary>
+        /// Invoke the Iterative Search algorithm on Sensor B data, display the ticks it takes to run the Search algorithm,
+        /// and highlist the found item in the ListBox under Sensor B, along with 2 before and after it.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonIterativeSearchB_Click(object sender, EventArgs e)
         {
             // Make sure we have data
@@ -380,11 +477,13 @@ namespace SatelliteSensor1
                             int foundValue = BinarySearchIterative(sensorBLinkedList, searchValue, 0, sensorBLinkedList.Count);
                             stopWatch.Stop();
 
+                            DisplayListboxData(sensorBLinkedList, listBoxSensorB);
+
                             // Highlight value in ListBox, plus two either side
                             HighlightItemInListBox(listBoxSensorB, foundValue);
 
-                            // Display number of ticks to run this Search algorithm
-                            textBoxIterativeSearchTimeB.Text = stopWatch.ElapsedTicks.ToString();
+                            // Display number of ticks to run this Search algorithm. Not showing any decimals
+                            textBoxIterativeSearchTimeB.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks";
                         }
                         else
                         {
@@ -408,6 +507,12 @@ namespace SatelliteSensor1
         } // end buttonIterativeSearchB_Click()
 
         // 4.11 Create Button click methods to search LinkedList<T> using Binary Search Recursive method
+        /// <summary>
+        /// Invoke the Recursive Search algorithm on Sensor A data, display the ticks it takes to run the Search algorithm,
+        /// and highlist the found item in the ListBox under Sensor A, along with 2 before and after it. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonRecursiveSearchA_Click(object sender, EventArgs e)
         {
             // Make sure we have data
@@ -429,11 +534,13 @@ namespace SatelliteSensor1
                             int foundValue = BinarySearchRecursive(sensorALinkedList, searchValue, 0, sensorALinkedList.Count);
                             stopWatch.Stop();
 
+                            DisplayListboxData(sensorALinkedList, listBoxSensorA);
+
                             // Highlight value in ListBox, plus two either side
                             HighlightItemInListBox(listBoxSensorA, foundValue);
 
-                            // Display number of ticks to run this Search algorithm
-                            textBoxRecursiveSearchTimeA.Text = stopWatch.ElapsedTicks.ToString();
+                            // Display number of ticks to run this Search algorithm. Not showing any decimals
+                            textBoxRecursiveSearchTimeA.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks"; 
                         }
                         else
                         {
@@ -457,6 +564,12 @@ namespace SatelliteSensor1
         } // end buttonRecursiveSearchA_Click()
 
         // 4.11 Create Button click methods to search LinkedList<T> using Binary Search Recursive method
+        /// <summary>
+        /// Invoke the Recursive Search algorithm on Sensor B data, display the ticks it takes to run the Search algorithm,
+        /// and highlist the found item in the ListBox under Sensor B, along with 2 before and after it. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void buttonRecursiveSearchB_Click(object sender, EventArgs e)
         {
             // Make sure we have data
@@ -478,11 +591,13 @@ namespace SatelliteSensor1
                             int foundValue = BinarySearchRecursive(sensorBLinkedList, searchValue, 0, sensorBLinkedList.Count);
                             stopWatch.Stop();
 
+                            DisplayListboxData(sensorBLinkedList, listBoxSensorB);
+
                             // Highlight value in ListBox, plus two either side
                             HighlightItemInListBox(listBoxSensorB, foundValue);
 
-                            // Display number of ticks to run this Search algorithm
-                            textBoxRecursiveSearchTimeB.Text = stopWatch.ElapsedTicks.ToString();
+                            // Display number of ticks to run this Search algorithm. Not showing any decimals
+                            textBoxRecursiveSearchTimeB.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks";
                         }
                         else
                         {
