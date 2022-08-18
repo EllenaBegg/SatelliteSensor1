@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Galileo;
 
 /*
  * Student:     Ellena Begg, 30040389
- * Date:        July, August 2022
- * Version:     1.0 Initial before testing
+ * Date:        August 2022
+ * Version:     1.1 Final Version
  * Description: Use Galileo dll to create data set of two Sensors. 
  *              Display, search and sort the data in a Windows Form application.
  */
@@ -41,8 +36,6 @@ namespace SatelliteSensor1
         {
             ReadData readData = new ReadData(); // Declare an instance of the Galileo library 
             int maxDataSize = 400;     // The LinkedList size will be hardcoded inside the method and must be equal to 400.
-            sensorALinkedList.Clear();
-            sensorBLinkedList.Clear();
 
             for (int x = 0; x < maxDataSize; x++)
             {
@@ -89,7 +82,7 @@ namespace SatelliteSensor1
         /// <param name="listBoxName">The ListBox to display the data in</param>
         private void DisplayListboxData(LinkedList<double> linkedList, ListBox listBoxName)
         {
-            listBoxName.Items.Clear(); 
+            listBoxName.Items.Clear();
             foreach (double sensorData in linkedList)
             {
                 listBoxName.Items.Add(sensorData.ToString());
@@ -130,7 +123,7 @@ namespace SatelliteSensor1
                     listBox.SetSelected(x, true); // highlight item, and the 2 before and after it
                 }
             }
-        } // end HighlightItemInListBox()
+        } 
 
         /// <summary>
         /// Confirm the input given to invoke a Search is between the actual values of the LinkedList data
@@ -153,6 +146,82 @@ namespace SatelliteSensor1
                 return false;
             }
         }
+
+        /// <summary>
+        /// Validates that we have data and it is sorted to Search. Also validates there is a search value.
+        /// </summary>
+        /// <param name="linkedList">The LinkedList<double> to validate is not empty</double></param>
+        /// <param name="listBox">The ListBox to validate is not empty</param>
+        /// <param name="textBox">The TextBox to ensure we have input</param>
+        /// <returns></returns>
+        private bool HaveValidData(LinkedList<double> linkedList, ListBox listBox, TextBox textBox)
+        {
+            ClearOldTimes();
+            // Make sure we have data 
+            if (linkedList.Count > 0)
+            {
+                // Make sure have data in ListBox. If not, then won't be sorted. Can't search unsorted list.
+                if (listBox.Items.Count > 0)
+                {
+                    // Make sure there is text in search box
+                    if (!string.IsNullOrEmpty(textBox.Text))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Enter a value to search for in the 'Search Target' textbox.");
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Sort the Sensor data first.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Load Sensor data, and choose a Sort option first.");
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Clear the data in the LinkedLists for both Sensor A and Sensor B data.
+        /// Also clear data in the ListBoxes for both Sensor A and Sensor B data. 
+        /// </summary>
+        private void ClearOldSensorData()
+        {
+            // Clear all old sensor data if present
+            listBoxSensorA.Items.Clear();
+            listBoxSensorB.Items.Clear();
+            sensorALinkedList.Clear();
+            sensorBLinkedList.Clear();
+        }
+
+        /// <summary>
+        /// Clear all old timings that are in the readonly TextBoxes.
+        /// </summary>
+        private void ClearOldTimes()
+        {
+            textBoxIterativeSearchTimeA.Clear();
+            textBoxIterativeSearchTimeB.Clear();
+            textBoxRecursiveSearchTimeA.Clear();
+            textBoxRecursiveSearchTimeB.Clear();
+            textBoxSelectionSortTimeA.Clear();
+            textBoxSelectionSortTimeB.Clear();
+            textBoxInsertionSortTimeA.Clear();
+            textBoxInsertionSortTimeB.Clear();
+        }
+
+        /// <summary>
+        /// Clear text from both of the Search Target TextBoxes.
+        /// </summary>
+        private void ClearOldSearchTargets()
+        {
+            textBoxSearchTargetA.Clear();
+            textBoxSearchTargetB.Clear();
+        }
+
         #endregion
 
         #region Sort and Search Methods
@@ -308,6 +377,9 @@ namespace SatelliteSensor1
         /// <param name="e"></param>
         private void buttonLoadSensorData_Click(object sender, EventArgs e)
         {
+            ClearOldSensorData();
+            ClearOldTimes();
+            ClearOldSearchTargets();
             LoadData();
             ShowAllSensorData();
         }
@@ -321,15 +393,21 @@ namespace SatelliteSensor1
         /// <param name="e"></param>
         private void buttonSelectionSortA_Click(object sender, EventArgs e)
         {
-            // Must start with a StopWatch before calling the method.
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            SelectionSort(sensorALinkedList);
-            stopWatch.Stop();
-            // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
-            textBoxSelectionSortTimeA.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds"; 
-            ShowAllSensorData();
-            DisplayListboxData(sensorALinkedList, listBoxSensorA);
+            ClearOldTimes();
+            ClearOldSearchTargets();
+            if (sensorALinkedList.Count > 0)
+            {            
+                // Must start with a StopWatch before calling the method.
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+                SelectionSort(sensorALinkedList);
+                stopWatch.Stop();
+                // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
+                textBoxSelectionSortTimeA.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds";
+                ShowAllSensorData();
+                DisplayListboxData(sensorALinkedList, listBoxSensorA);
+            }
+            // Not going to show MessageBox: no data to sort
         }
 
         // 4.12 Create Button click methods to sort LinkedList<T> using SelectionSort method
@@ -341,15 +419,21 @@ namespace SatelliteSensor1
         /// <param name="e"></param>
         private void buttonSelectionSortB_Click(object sender, EventArgs e)
         {
-            // Must start with a StopWatch before calling the method.
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            SelectionSort(sensorBLinkedList);
-            stopWatch.Stop();
-            // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
-            textBoxSelectionSortTimeB.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds"; 
-            ShowAllSensorData();
-            DisplayListboxData(sensorBLinkedList, listBoxSensorB);
+            ClearOldTimes();
+            ClearOldSearchTargets();
+            if (sensorBLinkedList.Count > 0)
+            {
+                // Must start with a StopWatch before calling the method.
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+                SelectionSort(sensorBLinkedList);
+                stopWatch.Stop();
+                // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
+                textBoxSelectionSortTimeB.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds";
+                ShowAllSensorData();
+                DisplayListboxData(sensorBLinkedList, listBoxSensorB);
+            }
+            // Not going to show MessageBox: no data to sort
         }
 
         // 4.12 Create Button click methods to sort LinkedList<T> using InsertionSort method
@@ -361,15 +445,21 @@ namespace SatelliteSensor1
         /// <param name="e"></param>
         private void buttonInsertionSortA_Click(object sender, EventArgs e)
         {
-            // Must start with a StopWatch before calling the method.
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            InsertionSort(sensorALinkedList);
-            stopWatch.Stop();
-            // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
-            textBoxInsertionSortTimeA.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds"; 
-            ShowAllSensorData();
-            DisplayListboxData(sensorALinkedList, listBoxSensorA);
+            ClearOldTimes();
+            ClearOldSearchTargets();
+            if (sensorALinkedList.Count > 0)
+            {
+                // Must start with a StopWatch before calling the method.
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+                InsertionSort(sensorALinkedList);
+                stopWatch.Stop();
+                // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
+                textBoxInsertionSortTimeA.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds";
+                ShowAllSensorData();
+                DisplayListboxData(sensorALinkedList, listBoxSensorA);
+            }
+            // Not going to show MessageBox: no data to sort
         }
 
         // 4.12 Create Button click methods to sort LinkedList<T> using InsertionSort method
@@ -381,15 +471,21 @@ namespace SatelliteSensor1
         /// <param name="e"></param>
         private void buttonInsertionSortB_Click(object sender, EventArgs e)
         {
-            // Must start with a StopWatch before calling the method.
-            Stopwatch stopWatch = new Stopwatch();
-            stopWatch.Start();
-            InsertionSort(sensorBLinkedList);
-            stopWatch.Stop();
-            // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
-            textBoxInsertionSortTimeB.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds";  
-            ShowAllSensorData();
-            DisplayListboxData(sensorBLinkedList, listBoxSensorB);
+            ClearOldTimes();
+            ClearOldSearchTargets();
+            if (sensorBLinkedList.Count > 0)
+            {
+                // Must start with a StopWatch before calling the method.
+                Stopwatch stopWatch = new Stopwatch();
+                stopWatch.Start();
+                InsertionSort(sensorBLinkedList);
+                stopWatch.Stop();
+                // display milliseconds it took to run the Sort. Milliseconds are recorded as integers, so do not have decimal places.
+                textBoxInsertionSortTimeB.Text = stopWatch.ElapsedMilliseconds.ToString("N0") + " milliseconds";
+                ShowAllSensorData();
+                DisplayListboxData(sensorBLinkedList, listBoxSensorB);
+            }
+            // Not going to show MessageBox: no data to sort
         }
 
         // 4.11 Create Button click methods to search LinkedList<T> using Binary Search Iterative method
@@ -401,51 +497,30 @@ namespace SatelliteSensor1
         /// <param name="e"></param>
         private void buttonIterativeSearchA_Click(object sender, EventArgs e)
         {
-            // Make sure we have data
-            if (sensorALinkedList.Count > 0 && listBoxSensorA.Items.Count > 0)
+            if (HaveValidData(sensorALinkedList, listBoxSensorA, textBoxSearchTargetA))
             {
-                // Make sure there is text in search box
-                if (!string.IsNullOrEmpty(textBoxSearchTargetA.Text))
+                double searchValue = (Convert.ToDouble(textBoxSearchTargetA.Text));
+
+                // Check search value is between actual values of LinkedList data
+                if (IsValidSearchValue(sensorALinkedList, searchValue))
                 {
-                    // Ensure LinkedList is SORTED
-                    if (SelectionSort(sensorALinkedList))
-                    {
-                        double searchValue = (Convert.ToDouble(textBoxSearchTargetA.Text));
+                    Stopwatch stopWatch = new Stopwatch();
+                    stopWatch.Start();
+                    int foundValue = BinarySearchIterative(sensorALinkedList, searchValue, 0, sensorALinkedList.Count);
+                    stopWatch.Stop();
 
-                        // Check search value is between actual values of LinkedList data
-                        if (IsValidSearchValue(sensorALinkedList, searchValue))
-                        {
-                            Stopwatch stopWatch = new Stopwatch();
-                            stopWatch.Start();
-                            int foundValue = BinarySearchIterative(sensorALinkedList, searchValue, 0, sensorALinkedList.Count);
-                            stopWatch.Stop();
+                    DisplayListboxData(sensorALinkedList, listBoxSensorA);
 
-                            DisplayListboxData(sensorALinkedList, listBoxSensorA);
+                    // Highlight value in ListBox, plus two either side
+                    HighlightItemInListBox(listBoxSensorA, foundValue);
 
-                            // Highlight value in ListBox, plus two either side
-                            HighlightItemInListBox(listBoxSensorA, foundValue);
-
-                            // Display number of ticks to run this Search algorithm. Not showing any decimals
-                            textBoxIterativeSearchTimeA.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks";
-                        }
-                        else
-                        {
-                            MessageBox.Show("Number entered to search for is not in the Sensor A Data collected.");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Sort the List from Sensor A first.");
-                    }
+                    // Display number of ticks to run this Search algorithm. Not showing any decimals
+                    textBoxIterativeSearchTimeA.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks";
                 }
                 else
                 {
-                    MessageBox.Show("Enter a value to search for.");
+                    MessageBox.Show("Number entered to search for is not in the Sensor A Data collected.");
                 }
-            }
-            else
-            {
-                MessageBox.Show("Load Sensor data, and choose a Sort option first.");
             }
         } // end buttonIterativeSearchA_Click()
 
@@ -458,52 +533,31 @@ namespace SatelliteSensor1
         /// <param name="e"></param>
         private void buttonIterativeSearchB_Click(object sender, EventArgs e)
         {
-            // Make sure we have data
-            if (sensorBLinkedList.Count > 0 && listBoxSensorB.Items.Count > 0)
+            if (HaveValidData(sensorBLinkedList, listBoxSensorB, textBoxSearchTargetB))
             {
-                // Make sure there is text in search box
-                if (!string.IsNullOrEmpty(textBoxSearchTargetB.Text))
+                double searchValue = (Convert.ToDouble(textBoxSearchTargetB.Text));
+
+                // Check search value is between actual values of LinkedList data
+                if (IsValidSearchValue(sensorBLinkedList, searchValue))
                 {
-                    // Ensure LinkedList is SORTED
-                    if (SelectionSort(sensorBLinkedList))
-                    {
-                        double searchValue = (Convert.ToDouble(textBoxSearchTargetB.Text));
+                    Stopwatch stopWatch = new Stopwatch();
+                    stopWatch.Start();
+                    int foundValue = BinarySearchIterative(sensorBLinkedList, searchValue, 0, sensorBLinkedList.Count);
+                    stopWatch.Stop();
 
-                        // Check search value is between actual values of LinkedList data
-                        if (IsValidSearchValue(sensorBLinkedList, searchValue))
-                        {
-                            Stopwatch stopWatch = new Stopwatch();
-                            stopWatch.Start();
-                            int foundValue = BinarySearchIterative(sensorBLinkedList, searchValue, 0, sensorBLinkedList.Count);
-                            stopWatch.Stop();
+                    DisplayListboxData(sensorBLinkedList, listBoxSensorB);
 
-                            DisplayListboxData(sensorBLinkedList, listBoxSensorB);
+                    // Highlight value in ListBox, plus two either side
+                    HighlightItemInListBox(listBoxSensorB, foundValue);
 
-                            // Highlight value in ListBox, plus two either side
-                            HighlightItemInListBox(listBoxSensorB, foundValue);
-
-                            // Display number of ticks to run this Search algorithm. Not showing any decimals
-                            textBoxIterativeSearchTimeB.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks";
-                        }
-                        else
-                        {
-                            MessageBox.Show("Number entered to search for is not in the Sensor B Data collected.");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Sort the List from Sensor B first.");
-                    }
+                    // Display number of ticks to run this Search algorithm. Not showing any decimals
+                    textBoxIterativeSearchTimeB.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks";
                 }
                 else
                 {
-                    MessageBox.Show("Enter a value to search for.");
+                    MessageBox.Show("Number entered to search for is not in the Sensor B Data collected.");
                 }
-            }
-            else
-            {
-                MessageBox.Show("Load Sensor data, and choose a Sort option first.");
-            }
+            } 
         } // end buttonIterativeSearchB_Click()
 
         // 4.11 Create Button click methods to search LinkedList<T> using Binary Search Recursive method
@@ -515,51 +569,30 @@ namespace SatelliteSensor1
         /// <param name="e"></param>
         private void buttonRecursiveSearchA_Click(object sender, EventArgs e)
         {
-            // Make sure we have data
-            if (sensorALinkedList.Count > 0 && listBoxSensorA.Items.Count > 0)
+            if (HaveValidData(sensorALinkedList, listBoxSensorA, textBoxSearchTargetA))
             {
-                // Make sure there is text in search box
-                if (!string.IsNullOrEmpty(textBoxSearchTargetA.Text))
+                double searchValue = (Convert.ToDouble(textBoxSearchTargetA.Text));
+
+                // Check search value is between actual values of LinkedList data
+                if (IsValidSearchValue(sensorALinkedList, searchValue))
                 {
-                    // Ensure LinkedList is SORTED
-                    if (SelectionSort(sensorALinkedList))
-                    {
-                        double searchValue = (Convert.ToDouble(textBoxSearchTargetA.Text));
+                    Stopwatch stopWatch = new Stopwatch();
+                    stopWatch.Start();
+                    int foundValue = BinarySearchRecursive(sensorALinkedList, searchValue, 0, sensorALinkedList.Count);
+                    stopWatch.Stop();
 
-                        // Check search value is between actual values of LinkedList data
-                        if (IsValidSearchValue(sensorALinkedList, searchValue))
-                        {
-                            Stopwatch stopWatch = new Stopwatch();
-                            stopWatch.Start();
-                            int foundValue = BinarySearchRecursive(sensorALinkedList, searchValue, 0, sensorALinkedList.Count);
-                            stopWatch.Stop();
+                    DisplayListboxData(sensorALinkedList, listBoxSensorA);
 
-                            DisplayListboxData(sensorALinkedList, listBoxSensorA);
+                    // Highlight value in ListBox, plus two either side
+                    HighlightItemInListBox(listBoxSensorA, foundValue);
 
-                            // Highlight value in ListBox, plus two either side
-                            HighlightItemInListBox(listBoxSensorA, foundValue);
-
-                            // Display number of ticks to run this Search algorithm. Not showing any decimals
-                            textBoxRecursiveSearchTimeA.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks"; 
-                        }
-                        else
-                        {
-                            MessageBox.Show("Number entered to search for is not in the Sensor A Data collected.");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Sort the List from Sensor A first.");
-                    }
+                    // Display number of ticks to run this Search algorithm. Not showing any decimals
+                    textBoxRecursiveSearchTimeA.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks";
                 }
                 else
                 {
-                    MessageBox.Show("Enter a value to search for.");
+                    MessageBox.Show("Number entered to search for is not in the Sensor A Data collected.");
                 }
-            }
-            else
-            {
-                MessageBox.Show("Load Sensor data, and choose a Sort option first.");
             }
         } // end buttonRecursiveSearchA_Click()
 
@@ -572,52 +605,31 @@ namespace SatelliteSensor1
         /// <param name="e"></param>
         private void buttonRecursiveSearchB_Click(object sender, EventArgs e)
         {
-            // Make sure we have data
-            if (sensorBLinkedList.Count > 0 && listBoxSensorB.Items.Count > 0)
+            if (HaveValidData(sensorBLinkedList, listBoxSensorB, textBoxSearchTargetB))
             {
-                // Make sure there is text in search box
-                if (!string.IsNullOrEmpty(textBoxSearchTargetB.Text))
+                double searchValue = (Convert.ToDouble(textBoxSearchTargetB.Text));
+
+                // Check search value is between actual values of LinkedList data
+                if (IsValidSearchValue(sensorBLinkedList, searchValue))
                 {
-                    // Ensure LinkedList is SORTED
-                    if (SelectionSort(sensorBLinkedList))
-                    {
-                        double searchValue = (Convert.ToDouble(textBoxSearchTargetB.Text));
+                    Stopwatch stopWatch = new Stopwatch();
+                    stopWatch.Start();
+                    int foundValue = BinarySearchRecursive(sensorBLinkedList, searchValue, 0, sensorBLinkedList.Count);
+                    stopWatch.Stop();
 
-                        // Check search value is between actual values of LinkedList data
-                        if (IsValidSearchValue(sensorBLinkedList, searchValue))
-                        {
-                            Stopwatch stopWatch = new Stopwatch();
-                            stopWatch.Start();
-                            int foundValue = BinarySearchRecursive(sensorBLinkedList, searchValue, 0, sensorBLinkedList.Count);
-                            stopWatch.Stop();
+                    DisplayListboxData(sensorBLinkedList, listBoxSensorB);
 
-                            DisplayListboxData(sensorBLinkedList, listBoxSensorB);
+                    // Highlight value in ListBox, plus two either side
+                    HighlightItemInListBox(listBoxSensorB, foundValue);
 
-                            // Highlight value in ListBox, plus two either side
-                            HighlightItemInListBox(listBoxSensorB, foundValue);
-
-                            // Display number of ticks to run this Search algorithm. Not showing any decimals
-                            textBoxRecursiveSearchTimeB.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks";
-                        }
-                        else
-                        {
-                            MessageBox.Show("Number entered to search for is not in the Sensor B Data collected.");
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Sort the List from Sensor B first.");
-                    }
+                    // Display number of ticks to run this Search algorithm. Not showing any decimals
+                    textBoxRecursiveSearchTimeB.Text = stopWatch.ElapsedTicks.ToString("N0") + " ticks";
                 }
                 else
                 {
-                    MessageBox.Show("Enter a value to search for.");
+                    MessageBox.Show("Number entered to search for is not in the Sensor B Data collected.");
                 }
-            }
-            else
-            {
-                MessageBox.Show("Load Sensor data, and choose a Sort option first.");
-            }
+            } 
         } // end buttonRecursiveSearchB_Click()
 
         // 4.14 Only numeric integer values can be entered
